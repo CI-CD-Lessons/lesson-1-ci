@@ -1,1 +1,1 @@
-# lesson-1-ci
+# CI/CD - Lesson 1 Demo CI
