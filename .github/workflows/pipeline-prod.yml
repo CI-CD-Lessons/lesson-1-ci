@@ -1,9 +1,10 @@
-# Name of workflow
+# Pipeline name
 name: Deploy Website
 
+# Set permission to merge the pr
 permissions: write-all
 
-# When workflow is triggered
+# When pipeline is triggered
 on:
   pull_request:
     branches:
@@ -11,6 +12,7 @@ on:
 
 # Jobs to carry out
 jobs:
+  # Deploy job
   deploy:
     # Operating system to run job on
     runs-on: ubuntu-latest
@@ -21,6 +23,7 @@ jobs:
         uses: actions/checkout@v1
         with:
           fetch-depth: 0
+      # Deploy code to Netlify
       - name: Deploy to netlify
         uses: netlify/actions/cli@master
         with:
@@ -28,10 +31,14 @@ jobs:
         env:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+  # Automerge job
   automerge:
+    # Execute only if deploy job succeeds
     needs:
       - deploy
+    # Operating system to run job on
     runs-on: ubuntu-latest
+    # Steps in job
     steps:
       - name: Automerge
         uses: "micheletriaca/automerge-action@master"
